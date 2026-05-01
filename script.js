@@ -1,5 +1,3 @@
-// script.js
-
 let current = 0;
 let countdownInterval;
 
@@ -15,7 +13,7 @@ const show = showData;
 /* Flatten episodes for playback */
 const episodes = show.seasons.flatMap(season => season.episodes);
 
-/* Create Season Sections dynamically */
+/* Create Season Sections */
 function createSeason(title){
     const section = document.createElement("div");
     section.style.marginBottom = "30px";
@@ -47,7 +45,8 @@ show.seasons.forEach(season => {
     season.episodes.forEach(ep => {
         const btn = document.createElement("button");
         btn.className = "episodeBtn";
-        btn.innerText = "Episode " + (globalIndex + 1);
+
+        btn.innerText = `${globalIndex + 1} - ${ep.name}`;
 
         const index = globalIndex;
         btn.onclick = () => playEpisode(index);
@@ -63,7 +62,7 @@ if(localStorage.getItem("lastEpisode")){
 
     continueBox.innerHTML = `
         <button class="episodeBtn" onclick="playEpisode(${last})">
-            Continue Episode ${last + 1}
+            Continue ${last + 1} - ${episodes[last].name}
         </button><br><br>
     `;
 }
@@ -75,7 +74,7 @@ function playEpisode(index){
     menu.style.display = "none";
     playerScreen.style.display = "block";
 
-    player.src = episodes[current];
+    player.src = episodes[current].video;
 
     let savedTime = localStorage.getItem("time_" + current);
     if(savedTime){
@@ -87,7 +86,7 @@ function playEpisode(index){
     localStorage.setItem("lastEpisode", current);
 
     document.getElementById("episodeTitle").innerText =
-        "Episode " + (current + 1);
+        `${current + 1} - ${episodes[current].name}`;
 }
 
 /* Save progress */
@@ -117,6 +116,7 @@ player.addEventListener("ended", () => {
     }, 1000);
 });
 
+/* Next Episode */
 function nextEpisode(){
     current++;
 
@@ -127,6 +127,7 @@ function nextEpisode(){
     playEpisode(current);
 }
 
+/* Home */
 function goHome(){
     player.pause();
 
