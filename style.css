@@ -1,84 +1,116 @@
-/* style.css */
+/* =========================
+   GLOBAL / BASE
+========================= */
 
-body{
-    margin:0;
-    font-family:Arial, sans-serif;
-    background:#111;
-    color:white;
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #111;
+    color: white;
 }
 
-/* HOME SCREEN */
-#menu{
-    padding:20px;
+/* utility */
+.hidden {
+    display: none;
 }
 
-h1{
-    text-align:center;
-    margin-bottom:20px;
+/* =========================
+   HOME SCREEN (SHOW + MENU)
+========================= */
+
+#homeScreen,
+#menu {
+    padding: 20px;
 }
 
-#episodeList{
-    display:block;
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
 }
 
-.episodeBtn{
-    background:#222;
-    border:none;
-    color:white;
-    padding:15px;
-    border-radius:8px;
-    cursor:pointer;
-    font-size:16px;
+/* episode / show list container */
+#episodeList {
+    display: block;
 }
 
-.episodeBtn:hover{
-    background:#444;
+/* (future) show grid */
+#showList {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
 }
 
-/* PLAYER */
-#playerScreen{
-    display:none;
-    width:100vw;
-    height:100vh;
-    background:black;
-    position:relative;
+/* =========================
+   BUTTONS (REUSABLE)
+========================= */
+
+.episodeBtn,
+.showBtn {
+    background: #222;
+    border: none;
+    color: white;
+    padding: 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background 0.2s ease;
 }
 
-video{
-    width:100%;
-    height:100%;
-    object-fit:contain;
-    background:black;
+.episodeBtn:hover,
+.showBtn:hover {
+    background: #444;
 }
 
-.controls{
-    position:absolute;
-    top:10px;
-    left:10px;
-    z-index:10;
-    display:flex;
-    align-items:center;
-    gap:15px;
+/* =========================
+   PLAYER SCREEN
+========================= */
+
+#playerScreen {
+    display: none;
+    width: 100vw;
+    height: 100vh;
+    background: black;
+    position: relative;
 }
 
-.controls button{
-    padding:10px;
-    cursor:pointer;
-    border:none;
-    border-radius:6px;
+video {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    background: black;
 }
 
-#episodeTitle{
-    font-size:18px;
-    font-weight:bold;
+/* top controls */
+.controls {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    gap: 15px;
 }
 
-#nextCountdown{
-    position:absolute;
-    bottom:20px;
-    right:20px;
-    background:rgba(0,0,0,0.7);
-    padding:12px;
-    border-radius:8px;
-    display:none;
+.controls button {
+    padding: 10px;
+    cursor: pointer;
+    border: none;
+    border-radius: 6px;
+}
+
+/* episode title */
+#episodeTitle {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/* countdown overlay */
+#nextCountdown {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    background: rgba(0,0,0,0.7);
+    padding: 12px;
+    border-radius: 8px;
+    display: none;
 }
