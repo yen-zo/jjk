@@ -7,13 +7,15 @@ const player = document.getElementById("player");
 const episodeList = document.getElementById("episodeList");
 const continueBox = document.getElementById("continueBox");
 const nextCountdown = document.getElementById("nextCountdown");
+const episodeTitle = document.getElementById("episodeTitle");
 
-const show = showData;
+/* showData must be defined in JJK.js */
+const episodes = showData;
 
-/* Flatten episodes for playback */
-const episodes = show.seasons.flatMap(season => season.episodes);
+/* Get unique seasons */
+const seasons = [...new Set(episodes.map(e => e.season))].sort((a,b)=>a-b);
 
-/* Create Season Sections */
+/* Create season sections */
 function createSeason(title){
     const section = document.createElement("div");
     section.style.marginBottom = "30px";
@@ -36,24 +38,25 @@ function createSeason(title){
     return grid;
 }
 
-/* Build UI from showData */
-let globalIndex = 0;
+/* Build UI grouped by season */
+seasons.forEach(seasonNum => {
+    const grid = createSeason("Season " + seasonNum);
 
-show.seasons.forEach(season => {
-    const grid = createSeason(season.name);
+    episodes
+        .filter(ep => ep.season === seasonNum)
+        .sort((a,b)=>a.episode - b.episode)
+        .forEach(ep => {
 
-    season.episodes.forEach(ep => {
-        const btn = document.createElement("button");
-        btn.className = "episodeBtn";
+            const index = episodes.indexOf(ep);
 
-        btn.innerText = `${globalIndex + 1} - ${ep.name}`;
+            const btn = document.createElement("button");
+            btn.className = "episodeBtn";
+            btn.innerText = ep.name;
 
-        const index = globalIndex;
-        btn.onclick = () => playEpisode(index);
+            btn.onclick = () => playEpisode(index);
 
-        grid.appendChild(btn);
-        globalIndex++;
-    });
+            grid.appendChild(btn);
+        });
 });
 
 /* Continue Watching */
@@ -62,7 +65,7 @@ if(localStorage.getItem("lastEpisode")){
 
     continueBox.innerHTML = `
         <button class="episodeBtn" onclick="playEpisode(${last})">
-            Continue ${last + 1} - ${episodes[last].name}
+            Continue ${episodes[last].name}
         </button><br><br>
     `;
 }
@@ -85,8 +88,7 @@ function playEpisode(index){
 
     localStorage.setItem("lastEpisode", current);
 
-    document.getElementById("episodeTitle").innerText =
-        `${current + 1} - ${episodes[current].name}`;
+    episodeTitle.innerText = episodes[current].name;
 }
 
 /* Save progress */
@@ -116,7 +118,6 @@ player.addEventListener("ended", () => {
     }, 1000);
 });
 
-/* Next Episode */
 function nextEpisode(){
     current++;
 
@@ -127,7 +128,6 @@ function nextEpisode(){
     playEpisode(current);
 }
 
-/* Home */
 function goHome(){
     player.pause();
 
