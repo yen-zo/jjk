@@ -1,7 +1,7 @@
 window.episodes = [
 
     /* SEASON 1 */
-    { name: "Episode 1", season: 1, episode: 1, video: "shows/JJK/JUJUTSU KAISEN - E01.mkv" },
+    { name: "Ryomen Sukuna", season: 1, episode: 1, video: "shows/JJK/JUJUTSU KAISEN - E01.mkv" },
     { name: "Episode 2", season: 1, episode: 2, video: "shows/JJK/JUJUTSU KAISEN - E02.mkv" },
     { name: "Episode 3", season: 1, episode: 3, video: "shows/JJK/JUJUTSU KAISEN - E03.mkv" },
     { name: "Episode 4", season: 1, episode: 4, video: "shows/JJK/JUJUTSU KAISEN - E04.mkv" },
