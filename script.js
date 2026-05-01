@@ -1,10 +1,5 @@
 // script.js
 
-// Loads from separate file: shows/JJK.js
-// Make sure index.html loads:
-// <script src="shows/JJK.js"></script>
-// <script src="script.js"></script>
-
 let current = 0;
 let countdownInterval;
 
@@ -15,7 +10,12 @@ const episodeList = document.getElementById("episodeList");
 const continueBox = document.getElementById("continueBox");
 const nextCountdown = document.getElementById("nextCountdown");
 
-/* Create Season Sections */
+const show = showData;
+
+/* Flatten episodes for playback */
+const episodes = show.seasons.flatMap(season => season.episodes);
+
+/* Create Season Sections dynamically */
 function createSeason(title){
     const section = document.createElement("div");
     section.style.marginBottom = "30px";
@@ -38,24 +38,23 @@ function createSeason(title){
     return grid;
 }
 
-const season1 = createSeason("Season 1");
-const season2 = createSeason("Season 2");
-const season3 = createSeason("Season 3");
+/* Build UI from showData */
+let globalIndex = 0;
 
-/* Build Episode Buttons */
-episodes.forEach((ep, index) => {
-    const btn = document.createElement("button");
-    btn.className = "episodeBtn";
-    btn.innerText = "Episode " + (index + 1);
-    btn.onclick = () => playEpisode(index);
+show.seasons.forEach(season => {
+    const grid = createSeason(season.name);
 
-    if(index <= 23){
-        season1.appendChild(btn);
-    }else if(index <= 46){
-        season2.appendChild(btn);
-    }else{
-        season3.appendChild(btn);
-    }
+    season.episodes.forEach(ep => {
+        const btn = document.createElement("button");
+        btn.className = "episodeBtn";
+        btn.innerText = "Episode " + (globalIndex + 1);
+
+        const index = globalIndex;
+        btn.onclick = () => playEpisode(index);
+
+        grid.appendChild(btn);
+        globalIndex++;
+    });
 });
 
 /* Continue Watching */
@@ -69,7 +68,7 @@ if(localStorage.getItem("lastEpisode")){
     `;
 }
 
-/* Start Episode */
+/* Play Episode */
 function playEpisode(index){
     current = index;
 
@@ -79,7 +78,6 @@ function playEpisode(index){
     player.src = episodes[current];
 
     let savedTime = localStorage.getItem("time_" + current);
-
     if(savedTime){
         player.currentTime = savedTime;
     }
@@ -92,12 +90,12 @@ function playEpisode(index){
         "Episode " + (current + 1);
 }
 
-/* Save Progress */
+/* Save progress */
 player.addEventListener("timeupdate", () => {
     localStorage.setItem("time_" + current, player.currentTime);
 });
 
-/* Auto Next */
+/* Auto next */
 player.addEventListener("ended", () => {
     let seconds = 5;
 
@@ -119,7 +117,6 @@ player.addEventListener("ended", () => {
     }, 1000);
 });
 
-/* Next Episode */
 function nextEpisode(){
     current++;
 
@@ -130,7 +127,6 @@ function nextEpisode(){
     playEpisode(current);
 }
 
-/* Home */
 function goHome(){
     player.pause();
 
