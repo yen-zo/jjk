@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Episode Player</title>
+
+<style>
+body{
+    margin:0;
+    font-family:Arial, sans-serif;
+    background:#111;
+    color:white;
+}
+
+/* MAIN MENU */
+#menu{
+    padding:20px;
+}
+
+h1{
+    text-align:center;
+}
+
+#episodeList{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+    gap:12px;
+    margin-top:20px;
+}
+
+.episodeBtn{
+    background:#222;
+    border:none;
+    color:white;
+    padding:15px;
+    cursor:pointer;
+    font-size:16px;
+    border-radius:8px;
+}
+
+.episodeBtn:hover{
+    background:#444;
+}
+
+/* PLAYER SCREEN */
+#playerScreen{
+    display:none;
+    width:100vw;
+    height:100vh;
+    background:black;
+    position:relative;
+}
+
+video{
+    width:100%;
+    height:100%;
+    object-fit:contain;
+    background:black;
+}
+
+.controls{
+    position:absolute;
+    top:10px;
+    left:10px;
+    z-index:10;
+}
+
+.controls button{
+    padding:10px;
+    margin-right:10px;
+    cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<!-- MAIN MENU -->
+<div id="menu">
+    <h1>Select Episode</h1>
+    <div id="episodeList"></div>
+</div>
+
+<!-- PLAYER -->
+<div id="playerScreen">
+    <div class="controls">
+        <button onclick="goHome()">Home</button>
+        <button onclick="goFullscreen()">Fullscreen</button>
+    </div>
+
+    <video id="player" controls autoplay></video>
+</div>
+
+<script>
+const episodes = [
+    "episode1.mp4",
+    "episode2.mp4",
+    "episode3.mp4",
+    "episode4.mp4",
+    "episode5.mp4",
+    "episode6.mp4",
+    "episode7.mp4",
+    "episode8.mp4",
+    "episode9.mp4",
+    "episode10.mp4"
+];
+
+let current = 0;
+
+const menu = document.getElementById("menu");
+const list = document.getElementById("episodeList");
+const playerScreen = document.getElementById("playerScreen");
+const player = document.getElementById("player");
+
+/* Build episode buttons */
+episodes.forEach((ep, index)=>{
+    const btn = document.createElement("button");
+    btn.className = "episodeBtn";
+    btn.textContent = "Episode " + (index + 1);
+    btn.onclick = ()=>playEpisode(index);
+    list.appendChild(btn);
+});
+
+/* Start selected episode */
+function playEpisode(index){
+    current = index;
+    menu.style.display = "none";
+    playerScreen.style.display = "block";
+    loadEpisode();
+}
+
+function loadEpisode(){
+    player.src = episodes[current];
+    player.play();
+}
+
+/* Auto next after 5 sec */
+player.addEventListener("ended", ()=>{
+    setTimeout(()=>{
+        current++;
+        if(current >= episodes.length) current = 0;
+        loadEpisode();
+    },5000);
+});
+
+function goHome(){
+    player.pause();
+    playerScreen.style.display = "none";
+    menu.style.display = "block";
+}
+
+function goFullscreen(){
+    document.documentElement.requestFullscreen();
+}
+</script>
+
+</body>
+</html>
