@@ -10,7 +10,8 @@ const nextCountdown = document.getElementById("nextCountdown");
 const episodeTitle = document.getElementById("episodeTitle");
 
 /* showData must be defined in JJK.js */
-const episodes = showData;
+const episodes = window.episodes;
+
 
 /* Get unique seasons */
 const seasons = [...new Set(episodes.map(e => e.season))].sort((a,b)=>a-b);
