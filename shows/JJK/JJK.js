@@ -1,4 +1,5 @@
-const episodes = [
+window.episodes = [
+
     /* SEASON 1 */
     { name: "Episode 1", season: 1, episode: 1, video: "shows/JJK/JUJUTSU KAISEN - E01.mkv" },
     { name: "Episode 2", season: 1, episode: 2, video: "shows/JJK/JUJUTSU KAISEN - E02.mkv" },
