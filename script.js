@@ -17,12 +17,18 @@ const episodeTitle = document.getElementById("episodeTitle");
 ========================= */
 
 function loadShow(showData) {
-    episodes = showData.episodes;
+    episodes = showData.seasons.flatMap(s => s.episodes);
+
+    // assign stable global index
+    episodes.forEach((ep, i) => ep.globalIndex = i);
 
     document.querySelector("#menu h1").innerText = showData.title;
 
-    buildUI();
+    current = 0;
+    episodeList.innerHTML = "";
+    continueBox.innerHTML = "";
 
+    buildUI();
     restoreContinue();
 }
 
@@ -32,9 +38,9 @@ function loadShow(showData) {
 ========================= */
 
 function buildUI() {
-    episodeList.innerHTML = "";
-
-    const seasons = [...new Set(episodes.map(e => e.season))].sort((a, b) => a - b);
+    const seasons = Array.from(
+        new Set(episodes.map(e => e.season))
+    ).sort((a, b) => a - b);
 
     seasons.forEach(seasonNum => {
         const grid = createSeason("Season " + seasonNum);
@@ -44,7 +50,7 @@ function buildUI() {
             .sort((a, b) => a.episode - b.episode)
             .forEach(ep => {
 
-                const index = episodes.indexOf(ep);
+                const index = ep.globalIndex;
 
                 const btn = document.createElement("button");
                 btn.className = "episodeBtn";
@@ -92,9 +98,9 @@ function createSeason(title) {
 function restoreContinue() {
     continueBox.innerHTML = "";
 
-    if (localStorage.getItem("lastEpisode")) {
-        let last = Number(localStorage.getItem("lastEpisode"));
+    let last = Number(localStorage.getItem("lastEpisode"));
 
+    if (episodes[last]) {
         continueBox.innerHTML = `
             <button class="episodeBtn" onclick="playEpisode(${last})">
                 Continue ${episodes[last].name}
@@ -187,3 +193,11 @@ function goHome() {
     nextCountdown.style.display = "none";
     clearInterval(countdownInterval);
 }
+
+
+/* =========================
+   INIT (IMPORTANT)
+   make sure this runs AFTER JJK.js loads
+========================= */
+
+loadShow(window.showData);
