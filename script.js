@@ -1,71 +1,9 @@
 // script.js
 
-const episodes = [
-    /* SEASON 1 */
-    "Jujutsu Kaisen/JUJUTSU KAISEN - E01.mkv",
-    "Jujutsu Kaisen/JUJUTSU KAISEN - E02.mkv",
-    "Jujutsu Kaisen/JUJUTSU KAISEN - E03.mkv",
-    "Jujutsu Kaisen/JUJUTSU KAISEN - E04.mkv",
-    "Jujutsu Kaisen/JUJUTSU KAISEN - E05.mkv",
-    "Jujutsu Kaisen/JUJUTSU KAISEN - E06.mkv",
-    "Jujutsu Kaisen/JUJUTSU KAISEN - E07.mkv",
-    "Jujutsu Kaisen/JUJUTSU KAISEN - E08.mkv",
-    "Jujutsu Kaisen/JUJUTSU KAISEN - E09.mkv",
-    "Jujutsu Kaisen/JUJUTSU KAISEN - E10.mkv",
-    "Jujutsu Kaisen/JUJUTSU KAISEN - E11.mkv",
-    "Jujutsu Kaisen/JUJUTSU KAISEN - E12.mkv",
-    "Jujutsu Kaisen/JUJUTSU KAISEN - E13.mkv",
-    "Jujutsu Kaisen/JUJUTSU KAISEN - E14.mkv",
-    "Jujutsu Kaisen/JUJUTSU KAISEN - E15.mkv",
-    "Jujutsu Kaisen/JUJUTSU KAISEN - E16.mkv",
-    "Jujutsu Kaisen/JUJUTSU KAISEN - E17.mkv",
-    "Jujutsu Kaisen/JUJUTSU KAISEN - E18.mkv",
-    "Jujutsu Kaisen/JUJUTSU KAISEN - E19.mkv",
-    "Jujutsu Kaisen/JUJUTSU KAISEN - E20.mkv",
-    "Jujutsu Kaisen/JUJUTSU KAISEN - E21.mkv",
-    "Jujutsu Kaisen/JUJUTSU KAISEN - E22.mkv",
-    "Jujutsu Kaisen/JUJUTSU KAISEN - E23.mkv",
-    "Jujutsu Kaisen/JUJUTSU KAISEN - E24.mkv",
-
-    /* SEASON 2 */
-    "Jujutsu Kaisen/JUJUTSU KAISEN - E25.mkv",
-    "Jujutsu Kaisen/JUJUTSU KAISEN - E26.mkv",
-    "Jujutsu Kaisen/JUJUTSU KAISEN - E27.mkv",
-    "Jujutsu Kaisen/JUJUTSU KAISEN - E28.mkv",
-    "Jujutsu Kaisen/JUJUTSU KAISEN - E29.mkv",
-    "Jujutsu Kaisen/JUJUTSU KAISEN - E30.mkv",
-    "Jujutsu Kaisen/JUJUTSU KAISEN - E31.mkv",
-    "Jujutsu Kaisen/JUJUTSU KAISEN - E32.mkv",
-    "Jujutsu Kaisen/JUJUTSU KAISEN - E33.mkv",
-    "Jujutsu Kaisen/JUJUTSU KAISEN - E34.mkv",
-    "Jujutsu Kaisen/JUJUTSU KAISEN - E35.mkv",
-    "Jujutsu Kaisen/JUJUTSU KAISEN - E36.mkv",
-    "Jujutsu Kaisen/JUJUTSU KAISEN - E37.mkv",
-    "Jujutsu Kaisen/JUJUTSU KAISEN - E38.mkv",
-    "Jujutsu Kaisen/JUJUTSU KAISEN - E39.mkv",
-    "Jujutsu Kaisen/JUJUTSU KAISEN - E40.mkv",
-    "Jujutsu Kaisen/JUJUTSU KAISEN - E41.mkv",
-    "Jujutsu Kaisen/JUJUTSU KAISEN - E42.mkv",
-    "Jujutsu Kaisen/JUJUTSU KAISEN - E43.mkv",
-    "Jujutsu Kaisen/JUJUTSU KAISEN - E44.mkv",
-    "Jujutsu Kaisen/JUJUTSU KAISEN - E45.mkv",
-    "Jujutsu Kaisen/JUJUTSU KAISEN - E46.mkv",
-    "Jujutsu Kaisen/JUJUTSU KAISEN - E47.mkv",
-
-    /* SEASON 3 */
-    "Jujutsu Kaisen/JUJUTSU KAISEN - E48.mkv",
-    "Jujutsu Kaisen/JUJUTSU KAISEN - E49.mkv",
-    "Jujutsu Kaisen/JUJUTSU KAISEN - E50.mkv",
-    "Jujutsu Kaisen/JUJUTSU KAISEN - E51.mkv",
-    "Jujutsu Kaisen/JUJUTSU KAISEN - E52.mkv",
-    "Jujutsu Kaisen/JUJUTSU KAISEN - E53.mkv",
-    "Jujutsu Kaisen/JUJUTSU KAISEN - E54.mkv",
-    "Jujutsu Kaisen/JUJUTSU KAISEN - E55.mkv",
-    "Jujutsu Kaisen/JUJUTSU KAISEN - E56.mkv",
-    "Jujutsu Kaisen/JUJUTSU KAISEN - E57.mkv",
-    "Jujutsu Kaisen/JUJUTSU KAISEN - E58.mkv",
-    "Jujutsu Kaisen/JUJUTSU KAISEN - E59.mkv"
-];
+// Loads from separate file: shows/JJK.js
+// Make sure index.html loads:
+// <script src="shows/JJK.js"></script>
+// <script src="script.js"></script>
 
 let current = 0;
 let countdownInterval;
@@ -77,6 +15,7 @@ const episodeList = document.getElementById("episodeList");
 const continueBox = document.getElementById("continueBox");
 const nextCountdown = document.getElementById("nextCountdown");
 
+/* Create Season Sections */
 function createSeason(title){
     const section = document.createElement("div");
     section.style.marginBottom = "30px";
@@ -103,11 +42,12 @@ const season1 = createSeason("Season 1");
 const season2 = createSeason("Season 2");
 const season3 = createSeason("Season 3");
 
-episodes.forEach((ep,index)=>{
+/* Build Episode Buttons */
+episodes.forEach((ep, index) => {
     const btn = document.createElement("button");
     btn.className = "episodeBtn";
     btn.innerText = "Episode " + (index + 1);
-    btn.onclick = ()=>playEpisode(index);
+    btn.onclick = () => playEpisode(index);
 
     if(index <= 23){
         season1.appendChild(btn);
@@ -139,6 +79,7 @@ function playEpisode(index){
     player.src = episodes[current];
 
     let savedTime = localStorage.getItem("time_" + current);
+
     if(savedTime){
         player.currentTime = savedTime;
     }
@@ -152,30 +93,33 @@ function playEpisode(index){
 }
 
 /* Save Progress */
-player.addEventListener("timeupdate", ()=>{
+player.addEventListener("timeupdate", () => {
     localStorage.setItem("time_" + current, player.currentTime);
 });
 
 /* Auto Next */
-player.addEventListener("ended", ()=>{
+player.addEventListener("ended", () => {
     let seconds = 5;
 
     nextCountdown.style.display = "block";
     nextCountdown.innerText = "Next Episode in " + seconds + "...";
 
-    countdownInterval = setInterval(()=>{
+    countdownInterval = setInterval(() => {
         seconds--;
 
-        nextCountdown.innerText = "Next Episode in " + seconds + "...";
+        nextCountdown.innerText =
+            "Next Episode in " + seconds + "...";
 
         if(seconds < 0){
             clearInterval(countdownInterval);
             nextCountdown.style.display = "none";
             nextEpisode();
         }
-    },1000);
+
+    }, 1000);
 });
 
+/* Next Episode */
 function nextEpisode(){
     current++;
 
@@ -186,6 +130,7 @@ function nextEpisode(){
     playEpisode(current);
 }
 
+/* Home */
 function goHome(){
     player.pause();
 
