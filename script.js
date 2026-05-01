@@ -13,17 +13,38 @@ const episodeTitle = document.getElementById("episodeTitle");
 const showList = document.getElementById("showList");
 
 
+function debug(msg) {
+    alert(msg);
+    console.log(msg);
+}
+
+
 /* =========================
    LOAD SHOW DATA
 ========================= */
 
 function loadShow(showData) {
+    if (!showData || !showData.seasons) {
+        debug("loadShow Didnt find show data");
+        return;
+    }
+
     episodes = showData.seasons.flatMap(s => s.episodes);
 
-    // stable index for playback + saving
+    if (!episodes.length) {
+        debug("loadShow Didnt find any episodes");
+        return;
+    }
+
     episodes.forEach((ep, i) => ep.globalIndex = i);
 
-    document.querySelector("#menu h1").innerText = showData.title;
+    const titleEl = document.querySelector("#menu h1");
+    if (!titleEl) {
+        debug("loadShow Couldnt find title element");
+        return;
+    }
+
+    titleEl.innerText = showData.title || "Unknown Show";
 
     current = 0;
 
@@ -40,13 +61,29 @@ function loadShow(showData) {
 ========================= */
 
 function buildUI() {
+    if (!episodes.length) {
+        debug("buildUI Didnt find episodes");
+        return;
+    }
+
     const seasons = [...new Set(episodes.map(e => e.season))].sort((a, b) => a - b);
+
+    if (!seasons.length) {
+        debug("buildUI Didnt find seasons");
+        return;
+    }
 
     seasons.forEach(seasonNum => {
         const grid = createSeason("Season " + seasonNum);
 
-        episodes
-            .filter(ep => ep.season === seasonNum)
+        const filtered = episodes.filter(ep => ep.season === seasonNum);
+
+        if (!filtered.length) {
+            debug("buildUI no episodes for Season " + seasonNum);
+            return;
+        }
+
+        filtered
             .sort((a, b) => a.episode - b.episode)
             .forEach(ep => {
 
@@ -54,7 +91,7 @@ function buildUI() {
 
                 const btn = document.createElement("button");
                 btn.className = "episodeBtn";
-                btn.innerText = ep.name;
+                btn.innerText = ep.name || "Unnamed";
 
                 btn.onclick = () => playEpisode(index);
 
@@ -74,9 +111,6 @@ function createSeason(title) {
 
     const label = document.createElement("h2");
     label.innerText = title;
-    label.style.margin = "25px 0 10px";
-    label.style.borderBottom = "1px solid #333";
-    label.style.paddingBottom = "5px";
 
     const grid = document.createElement("div");
     grid.style.display = "grid";
@@ -85,6 +119,12 @@ function createSeason(title) {
 
     section.appendChild(label);
     section.appendChild(grid);
+
+    if (!episodeList) {
+        debug("createSeason episodeList missing");
+        return grid;
+    }
+
     episodeList.appendChild(section);
 
     return grid;
@@ -100,13 +140,16 @@ function restoreContinue() {
 
     let last = Number(localStorage.getItem("lastEpisode"));
 
-    if (!isNaN(last) && episodes[last]) {
-        continueBox.innerHTML = `
-            <button class="episodeBtn" onclick="playEpisode(${last})">
-                Continue ${episodes[last].name}
-            </button><br><br>
-        `;
+    if (isNaN(last) || !episodes[last]) {
+        debug("restoreContinue no saved episode found");
+        return;
     }
+
+    continueBox.innerHTML = `
+        <button class="episodeBtn" onclick="playEpisode(${last})">
+            Continue ${episodes[last].name}
+        </button><br><br>
+    `;
 }
 
 
@@ -115,12 +158,22 @@ function restoreContinue() {
 ========================= */
 
 function playEpisode(index) {
+    if (!episodes[index]) {
+        debug("playEpisode invalid index: " + index);
+        return;
+    }
+
     current = index;
 
     menu.style.display = "none";
     playerScreen.style.display = "block";
 
     player.src = episodes[current].video;
+
+    if (!player.src) {
+        debug("playEpisode video missing");
+        return;
+    }
 
     let savedTime = localStorage.getItem("time_" + current);
     if (savedTime) {
@@ -173,6 +226,7 @@ function nextEpisode() {
     current++;
 
     if (current >= episodes.length) {
+        debug("nextEpisode reached end, looping back");
         current = 0;
     }
 
@@ -185,6 +239,11 @@ function nextEpisode() {
 ========================= */
 
 function goHome() {
+    if (!player) {
+        debug("goHome player missing");
+        return;
+    }
+
     player.pause();
 
     playerScreen.style.display = "none";
@@ -197,12 +256,10 @@ function goHome() {
 
 /* =========================
    INIT
-   MUST RUN AFTER show file loads
 ========================= */
 
-// safe guard so it doesn’t crash if missing
 if (window.showData) {
     loadShow(window.showData);
 } else {
-    console.warn("No showData found. Make sure JJK.js is loaded correctly.");
+    debug("INIT Didnt find showData (JJK.js not loaded or wrong variable)");
 }
