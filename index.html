@@ -9,17 +9,24 @@
 
 <body>
 
-<!-- HOME -->
-<div id="menu">
-    <h1>Jujutsu Kaisen</h1>
+<!-- HOME: SHOWS -->
+<div id="homeScreen">
+    <h1>Select a Show</h1>
+    <div id="showList"></div>
+</div>
+
+<!-- EPISODES -->
+<div id="menu" style="display:none;">
+    <h1 id="animeTitle"></h1>
     <div id="continueBox"></div>
     <div id="episodeList"></div>
 </div>
 
+
 <!-- PLAYER -->
 <div id="playerScreen">
     <div class="controls">
-        <button onclick="goHome()">Home</button>
+        <button onclick="goHome()">Back</button>
         <div id="episodeTitle">Episode</div>
     </div>
 
