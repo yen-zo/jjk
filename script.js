@@ -10,6 +10,7 @@ const episodeList = document.getElementById("episodeList");
 const continueBox = document.getElementById("continueBox");
 const nextCountdown = document.getElementById("nextCountdown");
 const episodeTitle = document.getElementById("episodeTitle");
+const showList = document.getElementById("showList");
 
 
 /* =========================
@@ -19,12 +20,13 @@ const episodeTitle = document.getElementById("episodeTitle");
 function loadShow(showData) {
     episodes = showData.seasons.flatMap(s => s.episodes);
 
-    // assign stable global index
+    // stable index for playback + saving
     episodes.forEach((ep, i) => ep.globalIndex = i);
 
     document.querySelector("#menu h1").innerText = showData.title;
 
     current = 0;
+
     episodeList.innerHTML = "";
     continueBox.innerHTML = "";
 
@@ -38,9 +40,7 @@ function loadShow(showData) {
 ========================= */
 
 function buildUI() {
-    const seasons = Array.from(
-        new Set(episodes.map(e => e.season))
-    ).sort((a, b) => a - b);
+    const seasons = [...new Set(episodes.map(e => e.season))].sort((a, b) => a - b);
 
     seasons.forEach(seasonNum => {
         const grid = createSeason("Season " + seasonNum);
@@ -100,7 +100,7 @@ function restoreContinue() {
 
     let last = Number(localStorage.getItem("lastEpisode"));
 
-    if (episodes[last]) {
+    if (!isNaN(last) && episodes[last]) {
         continueBox.innerHTML = `
             <button class="episodeBtn" onclick="playEpisode(${last})">
                 Continue ${episodes[last].name}
@@ -136,7 +136,7 @@ function playEpisode(index) {
 
 
 /* =========================
-   PROGRESS SAVE
+   SAVE PROGRESS
 ========================= */
 
 player.addEventListener("timeupdate", () => {
@@ -196,8 +196,13 @@ function goHome() {
 
 
 /* =========================
-   INIT (IMPORTANT)
-   make sure this runs AFTER JJK.js loads
+   INIT
+   MUST RUN AFTER show file loads
 ========================= */
 
-loadShow(window.showData);
+// safe guard so it doesn’t crash if missing
+if (window.showData) {
+    loadShow(window.showData);
+} else {
+    console.warn("No showData found. Make sure JJK.js is loaded correctly.");
+}
